@@ -12,7 +12,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* vertical centering */
+            justify-content: center;
             height: 100vh;
             margin: 0;
             overflow: hidden;
@@ -20,14 +20,12 @@
             padding: 20px;
         }
 
-        #dialogue-container {
-            margin-bottom: 40px;
-        }
+        #dialogue-container { margin-bottom: 40px; }
 
         .fade-text {
             opacity: 0;
             transition: opacity 1.5s ease-in-out;
-            font-size: clamp(1rem, 4vw, 1.5rem); /* responsive text */
+            font-size: clamp(1rem, 4vw, 1.5rem);
         }
 
         .visible { opacity: 1; }
@@ -46,21 +44,20 @@
             margin-bottom: 10px;
             font-weight: bold;
             letter-spacing: 1.5px;
-            font-size: clamp(0.9rem, 3vw, 1.2rem); /* responsive labels */
+            font-size: clamp(0.9rem, 3vw, 1.2rem);
         }
 
         input[type=range] {
             appearance: none;         
             -webkit-appearance: none;
             width: 100%;
-            height: 12px; /* thicker track for mobile */
+            height: 12px;
             background: #e0e0e0;
             border-radius: 6px;
             outline: none;
             cursor: pointer;
         }
 
-        /* Larger thumb for mobile */
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
@@ -81,31 +78,25 @@
 
         #result {
             margin-top: 30px;
-            font-size: clamp(1rem, 4vw, 1.2rem); /* responsive result text */
+            font-size: clamp(1rem, 4vw, 1.2rem);
             font-weight: bold;
             opacity: 0;
             transition: opacity 1s;
         }
 
-        #result.visible {
-            opacity: 1;
-        }
+        #result.visible { opacity: 1; }
 
         #finalImage {
             opacity: 0;
             transition: opacity 2s;
             margin-top: 40px;
-            max-width: 90%; /* responsive image */
+            max-width: 90%;
             height: auto;
         }
 
         @media (max-width: 480px) {
-            #dialogue-container {
-                margin-bottom: 20px;
-            }
-            #input-container {
-                width: 95%;
-            }
+            #dialogue-container { margin-bottom: 20px; }
+            #input-container { width: 95%; }
             input[type=range]::-webkit-slider-thumb,
             input[type=range]::-moz-range-thumb {
                 width: 36px;
@@ -131,6 +122,7 @@
 
     <img id="finalImage" src="weezer.JPG" alt="V">
 
+    <!-- Autoplay muted to bypass restrictions -->
     <audio id="bgSong" src="Pale Blue Eyes-The Velvet Underground.m4a" preload="auto" loop autoplay muted></audio>
     <audio id="yesSound" src="yes.mp3" preload="auto"></audio>
     <audio id="noSound" src="no.mp3" preload="auto"></audio>
@@ -146,6 +138,7 @@
         const bgSong = document.getElementById('bgSong');
 
         const script = [
+            "click here",
             "hi there",
             "I know I'm late already",
             "and I should've asked you sooner",
@@ -178,7 +171,7 @@
         function runDialogue() {
             bgSong.muted = false;
             bgSong.play().catch(() => {
-                console.log("blocked until user interacts.");
+                console.log("Autoplay blocked until user interacts.");
             });
             if (step < script.length) {
                 dialogueBox.textContent = script[step];
@@ -232,6 +225,12 @@
         });
 
         window.onload = runDialogue;
+
+        // Tap-to-start fallback for mobile
+        document.body.addEventListener("click", () => {
+            bgSong.muted = false;
+            bgSong.play();
+        }, { once: true });
     </script>
 </body>
 </html>
