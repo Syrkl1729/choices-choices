@@ -17,6 +17,7 @@
             margin: 0;
             overflow: hidden;
             text-align: center;
+            padding: 20px;
         }
 
         #dialogue-container {
@@ -26,13 +27,14 @@
         .fade-text {
             opacity: 0;
             transition: opacity 1.5s ease-in-out;
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 4vw, 1.5rem); /* responsive text */
         }
 
         .visible { opacity: 1; }
 
         #input-container {
-            width: 300px;
+            width: 90%;
+            max-width: 300px;
             opacity: 0;
             transition: opacity 2s;
             margin-top: 40px;
@@ -44,32 +46,34 @@
             margin-bottom: 10px;
             font-weight: bold;
             letter-spacing: 1.5px;
+            font-size: clamp(0.9rem, 3vw, 1.2rem); /* responsive labels */
         }
 
         input[type=range] {
             appearance: none;         
             -webkit-appearance: none;
             width: 100%;
-            height: 8px;
+            height: 12px; /* thicker track for mobile */
             background: #e0e0e0;
-            border-radius: 5px;
+            border-radius: 6px;
             outline: none;
             cursor: pointer;
         }
 
+        /* Larger thumb for mobile */
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 20px;
-            height: 20px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             background: #FF5252;
             cursor: pointer;
         }
 
         input[type=range]::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             background: #FF5252;
             cursor: pointer;
@@ -77,7 +81,7 @@
 
         #result {
             margin-top: 30px;
-            font-size: 1.5rem;
+            font-size: clamp(1rem, 4vw, 1.2rem); /* responsive result text */
             font-weight: bold;
             opacity: 0;
             transition: opacity 1s;
@@ -91,7 +95,22 @@
             opacity: 0;
             transition: opacity 2s;
             margin-top: 40px;
-            max-width: 300px;
+            max-width: 90%; /* responsive image */
+            height: auto;
+        }
+
+        @media (max-width: 480px) {
+            #dialogue-container {
+                margin-bottom: 20px;
+            }
+            #input-container {
+                width: 95%;
+            }
+            input[type=range]::-webkit-slider-thumb,
+            input[type=range]::-moz-range-thumb {
+                width: 36px;
+                height: 36px;
+            }
         }
     </style>
 </head>
@@ -112,7 +131,7 @@
 
     <img id="finalImage" src="weezer.JPG" alt="V">
 
-    <audio id="bgSong" src="Pale Blue Eyes-The Velvet Underground.m4a" preload="auto" loop autoplay></audio>
+    <audio id="bgSong" src="Pale Blue Eyes-The Velvet Underground.m4a" preload="auto" loop autoplay muted></audio>
     <audio id="yesSound" src="yes.mp3" preload="auto"></audio>
     <audio id="noSound" src="no.mp3" preload="auto"></audio>
 
@@ -137,7 +156,7 @@
             "why'd you even run this",
             "this is malware yk",
             "",
-            "god this is taking fucking forever isn't it?",
+            "god this is taking forever isn't it?",
             "why does the fade out need to take so long",
             "genuine ragebait",
             "",
@@ -149,7 +168,7 @@
         const yesScript = [
             "yes?",
             "that means more than you know",
-            "do mail your decision to madethecorrectchoice@gmail.com"
+            "do mail your decision to madethecorrectchoice@gmail.com",
             "happy valentine's day",
             "get weezer'd:)"
         ];
@@ -157,9 +176,10 @@
         let step = 0;
         
         function runDialogue() {
-             bgSong.play().catch(() => {
-            console.log("blocked until user interacts.");
-        });
+            bgSong.muted = false;
+            bgSong.play().catch(() => {
+                console.log("blocked until user interacts.");
+            });
             if (step < script.length) {
                 dialogueBox.textContent = script[step];
                 dialogueBox.classList.add('visible');
@@ -212,10 +232,6 @@
         });
 
         window.onload = runDialogue;
-        
     </script>
 </body>
 </html>
-
-
-
