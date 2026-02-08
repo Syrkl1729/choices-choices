@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>choices choices</title>
+    <style>
+        body {
+            background-color: #189bcc; 
+            color: #e0e0e0;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* vertical centering */
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        #dialogue-container {
+            margin-bottom: 40px;
+        }
+
+        .fade-text {
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            font-size: 1.5rem;
+        }
+
+        .visible { opacity: 1; }
+
+        #input-container {
+            width: 300px;
+            opacity: 0;
+            transition: opacity 2s;
+            margin-top: 40px;
+        }
+
+        .labels {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        input[type=range] {
+            appearance: none;         
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #FF5252;
+            cursor: pointer;
+        }
+
+        input[type=range]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #FF5252;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 30px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+
+        #result.visible {
+            opacity: 1;
+        }
+
+        #finalImage {
+            opacity: 0;
+            transition: opacity 2s;
+            margin-top: 40px;
+            max-width: 300px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="dialogue-container">
+        <div id="dialogue" class="fade-text"></div>
+    </div>
+
+    <div id="input-container">
+        <div class="labels">
+            <span style="color: #18cc49;">YES</span>
+            <span style="color: #FF5252;">NO</span>
+        </div>
+        <input type="range" id="choiceSlider" min="0" max="100" value="50">
+        <div id="result"></div>
+    </div>
+
+    <img id="finalImage" src="weezer.JPG" alt="V">
+
+    <audio id="bgSong" src="Pale Blue Eyes-The Velvet Underground.m4a" preload="auto" loop autoplay></audio>
+    <audio id="yesSound" src="yes.mp3" preload="auto"></audio>
+    <audio id="noSound" src="no.mp3" preload="auto"></audio>
+
+    <script>
+        const dialogueBox = document.getElementById('dialogue');
+        const inputContainer = document.getElementById('input-container');
+        const slider = document.getElementById('choiceSlider');
+        const resultBox = document.getElementById('result');
+        const finalImage = document.getElementById('finalImage');
+        const yesSound = document.getElementById('yesSound');
+        const noSound = document.getElementById('noSound');
+        const bgSong = document.getElementById('bgSong');
+
+        const script = [
+            "hi there",
+            "I know I'm late already",
+            "and I should've asked you sooner",
+            "but I wasn't sure what your answer would be",
+            "I still amn't tbh",
+            "but I'm going to ask regardless",
+            "hm",
+            "why'd you even run this",
+            "this is malware yk",
+            "it's a remote keylogger",
+            "god this is taking fucking forever isn't it?",
+            "why does the fade out need to take so long",
+            "genuine ragebait",
+            "",
+            "here goes anyways",
+            ":)",
+            "be my valentine?"
+        ];
+
+        const yesScript = [
+            "yes?",
+            "that means more than you know",
+            "happy valentine's day",
+            "get weezer'd:)"
+        ];
+
+        let step = 0;
+        
+        function runDialogue() {
+             bgSong.play().catch(() => {
+            console.log("blocked until user interacts.");
+        });
+            if (step < script.length) {
+                dialogueBox.textContent = script[step];
+                dialogueBox.classList.add('visible');
+                setTimeout(() => {
+                    dialogueBox.classList.remove('visible');
+                    setTimeout(() => {
+                        step++;
+                        runDialogue();
+                    }, 1500);
+                }, 3000);
+            } else {
+                inputContainer.style.opacity = '1';
+            }
+        }
+
+        function runYesDialogue(index = 0) {
+            if (index < yesScript.length) {
+                dialogueBox.textContent = yesScript[index];
+                dialogueBox.classList.add('visible');
+                setTimeout(() => {
+                    dialogueBox.classList.remove('visible');
+                    setTimeout(() => {
+                        runYesDialogue(index + 1);
+                    }, 1500);
+                }, 3000);
+            } else {
+                finalImage.style.opacity = "1";
+            }
+        }
+
+        slider.addEventListener('input', (e) => {
+            let val = parseInt(e.target.value);
+            if (val <= 5) {
+                resultBox.textContent = ":)";
+                resultBox.classList.add('visible');
+                yesSound.currentTime = 0;
+                yesSound.play();
+                inputContainer.style.opacity = '0';
+                setTimeout(() => {
+                    runYesDialogue();
+                }, 2000);
+            } else if (val >= 95) {
+                resultBox.textContent = "man";
+                resultBox.classList.add('visible');
+                noSound.currentTime = 0;
+                noSound.play();
+            } else {
+                resultBox.classList.remove('visible');
+            }
+        });
+
+        window.onload = runDialogue;
+        
+    </script>
+</body>
+</html>
